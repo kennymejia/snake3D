@@ -1,0 +1,16 @@
+body {
+
+    background-color: black;
+}
+
+.controls {
+
+    color:darkorchid;
+    font-family: sans-serif;
+    font-size: 180%;
+    position: fixed;
+    text-align: center;
+    width: 150%;
+    padding-top: 20%;
+    text-shadow: 1px 1px aqua;
+}

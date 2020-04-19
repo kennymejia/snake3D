@@ -1,0 +1,14 @@
+{
+  "name": "snake3d",
+  "version": "1.0.0",
+  "description": "CMPT 446 Project",
+  "main": "snake3d.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kenny Mejia",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

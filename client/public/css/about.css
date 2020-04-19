@@ -1,0 +1,98 @@
+* {box-sizing: border-box;}
+body {
+	margin: 0;
+	padding: 0;
+	font-family: sans-serif;
+}
+
+.travel{
+	position: absolute;
+	color: white;
+	width: 400px;
+	height: 140px;
+	margin: 320px  400px;
+	font-size: 20px;
+	text-align: justify;
+}
+
+.learn{
+	position: absolute;
+	color: white;
+	width: 400px;
+	height: 140px;
+	margin: 370px  400px;
+	font-size: 20px;
+	text-align: justify;	
+}
+
+.topten{
+	position: absolute;
+	color: white;
+	width: 400px;
+	height: 140px;
+	margin: 420px  400px;
+	font-size: 20px;
+	text-align: justify;
+}
+#sound{
+	position: absolute;
+	color: white;
+	width: 400px;
+	height: 140px;
+	margin: 470px  400px;
+	font-size: 20px;
+	text-align: justify;
+}
+.mainmenu{
+	position: absolute;
+	color: white;
+	width: 600px;
+	height: 140px;
+	margin: 210px  200px;
+	font-size: 40px;
+	text-align: center;
+}
+.choice{
+	position: absolute;
+	color: white;
+	width: 600px;
+	height: 140px;
+	margin: 265px  200px;
+	font-size: 20px;
+	text-align: center;
+}
+.quotes {
+    -webkit-animation: fadeinout 2s infinite;
+    animation: fadeinout 4s infinite;
+	display: none;
+    position: fixed;
+    color: white;
+    margin: 580px 310px;
+    text-shadow: -1px 2px 2px #000;
+    text-align: center;
+    width: 400px;
+    height: 400px;
+}
+a:link {
+    color: white; 
+    background-color: transparent; 
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:hover {
+    color: red;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+a:active {
+    color: yellow;
+    background-color: transparent;
+    text-decoration: underline;
+}
