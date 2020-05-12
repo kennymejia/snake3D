@@ -1,9 +1,9 @@
 new p5(snakeProject => {
 
-    const cells = 15;
+    const cells = 11;
     const cellsRight = (cells - 1) / 2;
     const startingSegments = 1;
-    const msMovement = 1000;
+    const msMovement = 750;
     const speedFactor = 3;
     let snakeFood;
     let foodImage;
@@ -15,12 +15,20 @@ new p5(snakeProject => {
     let zeroVector;
     let nextMoveTime;
     let rightmostCellCenter;
+    let initialCamera = true;
+    let offsetX = 0;
+    let offsetY = 0;
+    let cameraZ;
+    let cameraX;
+    let cameraY;
 
     // FORCING PROGRAM TO WAIT FOR FOOD IMG
     snakeProject.preload = () => {
+        foodImage = snakeProject.loadImage('../images/sTexture.jpg');
+        sound = snakeProject.loadSound('../music/pop.mp3');
+        music = snakeProject.loadSound('../music/theme.mp3');
 
-        foodImage = snakeProject.loadImage('../images/apple.png');
-
+        music.play();
     };
 
     // INITIALIZING THE PLAY FIELD
@@ -30,7 +38,7 @@ new p5(snakeProject => {
         const window = snakeProject.min(snakeProject.windowWidth - 10, snakeProject.windowHeight - 50);
 
         // WEBGL SO WE CAN PLAY IN 3D
-        snakeProject.createCanvas(window, window, snakeProject.WEBGL);
+        snakeProject.createCanvas(window * 1.2, window, snakeProject.WEBGL);
 
         // CENTERED AT THE ORIGIN
         zeroVector = snakeProject.createVector(0, 0, 0);
@@ -40,6 +48,8 @@ new p5(snakeProject => {
         cellWidth = snakeProject.round(mapWidth / cells);
 
         rightmostCellCenter = cellWidth * cellsRight;
+
+        snakeProject.ambientLight(255,255,255);
 
         // DEFINING OUR CONTROLS
         mapKeys();
@@ -97,16 +107,28 @@ new p5(snakeProject => {
     // HANDLES POSITIONING THE CAMERA 
     function positionCamera() {
 
-        const cameraX = -mapWidth * 0.8;
+        if (initialCamera) {
 
-        const cameraY = -mapWidth * 0.8;
+            cameraZ = (snakeProject.height / 2.0) / Math.tan(Math.PI * 30.0 / 180.0);
+            
+            cameraX = -mapWidth * 0.8;
+            
+            cameraY = -mapWidth * 0.8;
+            
+            initialCamera = false;
+        }
+        
+        // CAMERA POSITION BASED ON MOVEMENT OF THE MOUSE
+        cameraX = -snakeProject.mouseX;
 
-        const cameraZ = (snakeProject.height / 2.0) / Math.tan(Math.PI * 30.0 / 180.0);
+        cameraY = -snakeProject.mouseY;
+
+        snakeProject.directionalLight(255,255,255,-cameraX * .5, -cameraY * .5, cameraX * .8);
 
         // CAMERA POSITION VALUE ON XYZ
         // CENTER OF THE SKETCH
         // XYZ COMPONENT UP FROM CAMERA
-        snakeProject.camera(cameraX, cameraY, cameraZ, 0, 0, 0, 0, 1, 0);
+        snakeProject.camera(cameraX, cameraY, cameraZ, -50, 0, 0, 0, 1, 0);
     }
 
     // KEYS USED TO NAVIGATE THE MAP
@@ -173,10 +195,12 @@ new p5(snakeProject => {
 
             } else {
                 
-                if (newHeadPos.equals(snakeFood))
+                if (newHeadPos.equals(snakeFood)) {
+                
                     snakeFood = newFoodPosition();
-
-                else
+                    sound.play();
+            
+                } else
                     // DISCARD THE LAST ONE
                     snakeBody.pop();
 
@@ -236,31 +260,23 @@ new p5(snakeProject => {
     // HANDLES DRAWING THE SNAKE
     function drawSnake() {
 
-         const segmentWidth = cellWidth * 0.9;
+         const segmentWidth = cellWidth * 0.6;
 
         snakeBody.forEach((segment, location) => {
-
-            // OUTLINE
-            snakeProject.stroke('white');
-
-            if (location === 0) {
-
-                snakeProject.fill(0,255,255,70);
-
-            } else {
-
-                snakeProject.fill(255,105,180,70)
-            }
-
+            let r = snakeProject.random(255);
+            let g = snakeProject.random(255);
+            let b = snakeProject.random(255);
             
+            // OUTLINE
+            snakeProject.stroke('cyan');
 
             at(...segment.array(), () => 
-                snakeProject.box(snakeProject.map
-                    (location, 0, snakeBody.length, segmentWidth, segmentWidth * 0.5)));
+                snakeProject.sphere(snakeProject.map
+                    (location, 0, snakeBody.length, segmentWidth, segmentWidth * 0.3)));
 
-            snakeProject.stroke(0, 200, 255);
+            snakeProject.stroke(r, g, b);
 
-            snakeProject.fill(0, 200, 255, 60);
+            snakeProject.fill('cyan');
 
             drawReferenceStructures(snakeBody[0], segmentWidth);
 
@@ -270,17 +286,23 @@ new p5(snakeProject => {
     // HANDLES DRAWING THE FOOD
     function drawFood() {
 
+        let r = snakeProject.random(255);
+        let g = snakeProject.random(255);
+        let b = snakeProject.random(255);
+
         snakeProject.noStroke();
 
         snakeProject.texture(foodImage);
 
-        let itemWidth = cellWidth * 0.8;
+        let itemWidth = cellWidth * 0.4;
 
-        at(...snakeFood.array(), () => snakeProject.box(itemWidth));
+        at(...snakeFood.array(), () => snakeProject.sphere(itemWidth));
 
-        snakeProject.stroke(255, 0, 0);
+        snakeProject.stroke(r,g,b);
 
-        snakeProject.fill(255, 0, 0, 60);
+        snakeProject.fill('red');
+
+        snakeProject.specularMaterial(1000);
 
         drawReferenceStructures(snakeFood, itemWidth);
 
