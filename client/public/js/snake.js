@@ -225,7 +225,7 @@ new p5(snakeProject => {
                     if(brightness > 0 && initialTime - snakeProject.millis() == 1000){
                         brightness-=80;
                         initialTime += 1000;
-                        snakeProject.ambientLight(brightness,brightness,brightness);
+                        snakeProject.ambientLight(brightness);
                         snakeProject.directionalLight(brightness, brightness, brightness,0,0,0);
                         snakeProject.redraw();
                     }
