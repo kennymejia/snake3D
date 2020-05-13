@@ -21,18 +21,24 @@ new p5(snakeProject => {
     let cameraZ;
     let cameraX;
     let cameraY;
+    let initialTime = 0;
+    let waitTime = 3000;
+    let tiltX = 0;
+    let tiltY = 1;
+    let tiltZ = 0;
 
     // FORCING PROGRAM TO WAIT FOR FOOD IMG
     snakeProject.preload = () => {
         foodImage = snakeProject.loadImage('../images/sTexture.jpg');
         sound = snakeProject.loadSound('../music/pop.mp3');
-        music = snakeProject.loadSound('../music/theme.mp3');
-
-        music.play();
+        gameOver = snakeProject.loadSound('../music/pmsound.mp3');
+        music = snakeProject.loadSound('../music/puzzle3.mp3');
     };
 
     // INITIALIZING THE PLAY FIELD
     snakeProject.setup = () => {
+
+        music.loop();
 
         // BEGINNING OF ANY P5 APP
         const window = snakeProject.min(snakeProject.windowWidth - 10, snakeProject.windowHeight - 50);
@@ -49,7 +55,7 @@ new p5(snakeProject => {
 
         rightmostCellCenter = cellWidth * cellsRight;
 
-        snakeProject.ambientLight(255,255,255);
+        snakeProject.ambientLight(100);
 
         // DEFINING OUR CONTROLS
         mapKeys();
@@ -102,6 +108,24 @@ new p5(snakeProject => {
                     nextMoveTime = snakeProject.millis();
             }
         }
+
+        // TILT LEFT
+        if (snakeProject.key == 'z') {
+            if(tiltX != -2) {
+                tiltX-=.1;
+                tiltY-=.1;
+                tiltZ-=.1;
+            }
+        }
+
+        // TILT RIGHT
+        if (snakeProject.key == 'x') {
+            if(tiltX != 2) {
+                tiltX+=.1;
+                tiltY+=.1;
+                tiltZ+=.1;
+            }
+        }
     };
 
     // HANDLES POSITIONING THE CAMERA 
@@ -123,12 +147,13 @@ new p5(snakeProject => {
 
         cameraY = -snakeProject.mouseY;
 
+        // DIRECTIONAL LIGHTING MOVES WITH MOUSE
         snakeProject.directionalLight(255,255,255,-cameraX * .5, -cameraY * .5, cameraX * .8);
 
         // CAMERA POSITION VALUE ON XYZ
         // CENTER OF THE SKETCH
         // XYZ COMPONENT UP FROM CAMERA
-        snakeProject.camera(cameraX, cameraY, cameraZ, -50, 0, 0, 0, 1, 0);
+        snakeProject.camera(cameraX, cameraY, cameraZ, -50, 0, 0, tiltX, tiltY, tiltZ);
     }
 
     // KEYS USED TO NAVIGATE THE MAP
@@ -190,7 +215,21 @@ new p5(snakeProject => {
             let newHeadPos = p5.Vector.add(snakeBody[0], p5.Vector.mult(direction, cellWidth));
 
             if (collides(newHeadPos)) {
+                
+                gameOver.play();
 
+                let brightness = 255;
+                initialTime = snakeProject.millis() + 2000;
+                while (initialTime - snakeProject.millis() != 0){
+                
+                    if(brightness > 0 && initialTime - snakeProject.millis() == 1000){
+                        brightness-=80;
+                        initialTime += 1000;
+                        snakeProject.ambientLight(brightness,brightness,brightness);
+                        snakeProject.directionalLight(brightness, brightness, brightness,0,0,0);
+                        snakeProject.redraw();
+                    }
+                }
                 setUp();
 
             } else {
